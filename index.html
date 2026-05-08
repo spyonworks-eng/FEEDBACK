@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rate SPYON CCTV</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.card{background:#fff;border-radius:20px;padding:2rem 1.75rem;max-width:380px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,0.08);text-align:center}
+.shop-name{font-size:22px;font-weight:700;color:#111;margin-bottom:4px}
+.tagline{font-size:14px;color:#888;margin-bottom:28px}
+.stars{display:flex;justify-content:center;gap:12px;margin-bottom:8px}
+.star{width:42px;height:42px;cursor:pointer;fill:#FFB800;opacity:0.2;transition:all 0.15s;user-select:none}
+.star.lit{opacity:1;transform:scale(1.08)}
+.star-label{font-size:13px;color:#aaa;height:20px;margin-bottom:18px}
+.feedback{display:none;text-align:left;margin-top:4px}
+.feedback.show{display:block}
+.fb-title{font-size:14px;color:#555;margin-bottom:8px;font-weight:500}
+textarea{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;min-height:90px;resize:none;font-family:inherit;color:#111;background:#fafafa;outline:none;margin-bottom:12px}
+textarea:focus{border-color:#3b82f6}
+.btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:4px}
+.btn-green{background:#22c55e;color:#fff}
+.btn-blue{background:#25d366;color:#fff}
+.btn:active{opacity:0.85}
+.divider{border:none;border-top:1px solid #f0f0f0;margin:20px 0}
+.note{font-size:11px;color:#ccc;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="shop-name">SPYON CCTV</div>
+  <div class="tagline">How was your experience with us?</div>
+  <div class="stars" id="stars">
+    <svg class="star" viewBox="0 0 24 24" onclick="rate(1)" aria-label="1 star"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    <svg class="star" viewBox="0 0 24 24" onclick="rate(2)" aria-label="2 stars"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    <svg class="star" viewBox="0 0 24 24" onclick="rate(3)" aria-label="3 stars"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    <svg class="star" viewBox="0 0 24 24" onclick="rate(4)" aria-label="4 stars"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    <svg class="star" viewBox="0 0 24 24" onclick="rate(5)" aria-label="5 stars"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="star-label" id="lbl">Tap to rate</div>
+  <div class="feedback" id="fb">
+    <div class="fb-title" id="fb-title">Tell us what went wrong</div>
+    <textarea id="msg" placeholder="We'd love to know how we can improve..."></textarea>
+    <button class="btn btn-green" id="act-btn" onclick="submit()">Submit</button>
+  </div>
+  <div class="note">Thank you for helping us improve ⭐</div>
+</div>
+<script>
+var sel=0, thr=4;
+var labels=['','Very poor 😟','Poor 😕','Average 😐','Good 😊','Excellent! 🤩'];
+var googleURL='https://maps.app.goo.gl/kfDEeYocEb4otKhQ8';
+var waNum='9643609631';
+
+function rate(n){
+  sel=n;
+  document.querySelectorAll('.star').forEach(function(s,i){s.classList.toggle('lit',i<n)});
+  document.getElementById('lbl').textContent=labels[n];
+  var fb=document.getElementById('fb');
+  var btn=document.getElementById('act-btn');
+  var title=document.getElementById('fb-title');
+  fb.classList.add('show');
+  if(n>=thr){
+    title.style.display='none';
+    document.getElementById('msg').style.display='none';
+    btn.className='btn btn-green';
+    btn.textContent='⭐ Leave a Google Review';
+  } else {
+    title.style.display='block';
+    document.getElementById('msg').style.display='block';
+    btn.className='btn btn-blue';
+    btn.textContent='📩 Send feedback via WhatsApp';
+  }
+}
+
+function submit(){
+  var n=sel, msg=document.getElementById('msg').value;
+  if(n===0){alert('Please select a star rating first.');return;}
+  if(n>=thr){
+    window.location.href=googleURL;
+  } else {
+    var text='*New feedback for SPYON CCTV*%0A%0ARating: '+n+' star'+(n>1?'s':'')+'%0A%0AMessage: '+(msg||'(no message)');
+    window.location.href='https://wa.me/'+waNum+'?text='+text;
+  }
+}
+</script>
+</body>
+</html>
