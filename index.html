@@ -49,8 +49,8 @@ textarea:focus{border-color:#3b82f6}
 <script>
 var sel = 0;
 var THRESHOLD = 4;
-var GOOGLE_URL = 'https://maps.app.goo.gl/kfDEeYocEb4otKhQ8';
-var WA_NUM = '9643609631';
+var GOOGLE_URL = 'https://www.google.com/maps/place/Spyon+Security+Systems/@28.6570733,77.2333508,17z/data=!4m8!3m7!1s0x390cfd7d2e09ac63:0x38a980f02d61209e!8m2!3d28.6570686!4d77.2359257!9m1!1b1!16s%2Fg%2F11h5_vhlqx?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D';
+var WA_NUM = '919643609631';
 var SHOP = 'SPYON CCTV';
 var labels = ['','Very poor 😟','Poor 😕','Average 😐','Good 😊','Excellent! 🤩'];
 
@@ -83,16 +83,8 @@ function submit() {
   var starEmoji = ['','⭐','⭐⭐','⭐⭐⭐','⭐⭐⭐⭐','⭐⭐⭐⭐⭐'][stars];
 
   if (stars >= THRESHOLD) {
-    // Notify owner on WhatsApp first, then open Google Reviews
-    var ownerMsg = '*New Review Alert — ' + SHOP + '*'
-      + '%0A%0A' + starEmoji + ' ' + stars + ' Star Rating'
-      + '%0A%0ACustomer is being redirected to Google Reviews right now!';
-    var waURL = 'https://wa.me/' + WA_NUM + '?text=' + ownerMsg;
-    // Open WhatsApp notify in background tab, then redirect to Google
-    var waWin = window.open(waURL, '_blank');
-    setTimeout(function() {
-      window.location.href = GOOGLE_URL;
-    }, 1200);
+    // Redirect directly to Google Reviews
+    window.location.href = GOOGLE_URL;
   } else {
     // Low rating — send full feedback to owner on WhatsApp
     var feedbackMsg = '*New Feedback — ' + SHOP + '*'
