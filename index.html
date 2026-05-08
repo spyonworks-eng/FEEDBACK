@@ -21,9 +21,8 @@ textarea{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:1
 textarea:focus{border-color:#3b82f6}
 .btn{width:100%;padding:13px;border-radius:14px;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:4px}
 .btn-green{background:#22c55e;color:#fff}
-.btn-blue{background:#25d366;color:#fff}
+.btn-wa{background:#25d366;color:#fff}
 .btn:active{opacity:0.85}
-.divider{border:none;border-top:1px solid #f0f0f0;margin:20px 0}
 .note{font-size:11px;color:#ccc;margin-top:16px}
 </style>
 </head>
@@ -42,45 +41,65 @@ textarea:focus{border-color:#3b82f6}
   <div class="feedback" id="fb">
     <div class="fb-title" id="fb-title">Tell us what went wrong</div>
     <textarea id="msg" placeholder="We'd love to know how we can improve..."></textarea>
-    <button class="btn btn-green" id="act-btn" onclick="submit()">Submit</button>
+    <button class="btn" id="act-btn" onclick="submit()">Submit</button>
   </div>
   <div class="note">Thank you for helping us improve ⭐</div>
 </div>
-<script>
-var sel=0, thr=4;
-var labels=['','Very poor 😟','Poor 😕','Average 😐','Good 😊','Excellent! 🤩'];
-var googleURL='https://maps.app.goo.gl/kfDEeYocEb4otKhQ8';
-var waNum='9643609631';
 
-function rate(n){
-  sel=n;
-  document.querySelectorAll('.star').forEach(function(s,i){s.classList.toggle('lit',i<n)});
-  document.getElementById('lbl').textContent=labels[n];
-  var fb=document.getElementById('fb');
-  var btn=document.getElementById('act-btn');
-  var title=document.getElementById('fb-title');
+<script>
+var sel = 0;
+var THRESHOLD = 4;
+var GOOGLE_URL = 'https://g.page/r/YOUR_PLACE_ID/review';
+var WA_NUM = '919810000000';
+var SHOP = 'SPYON CCTV';
+var labels = ['','Very poor 😟','Poor 😕','Average 😐','Good 😊','Excellent! 🤩'];
+
+function rate(n) {
+  sel = n;
+  document.querySelectorAll('.star').forEach(function(s,i){ s.classList.toggle('lit', i < n); });
+  document.getElementById('lbl').textContent = labels[n];
+  var fb = document.getElementById('fb');
+  var btn = document.getElementById('act-btn');
+  var title = document.getElementById('fb-title');
+  var ta = document.getElementById('msg');
   fb.classList.add('show');
-  if(n>=thr){
-    title.style.display='none';
-    document.getElementById('msg').style.display='none';
-    btn.className='btn btn-green';
-    btn.textContent='⭐ Leave a Google Review';
+  if (n >= THRESHOLD) {
+    title.style.display = 'none';
+    ta.style.display = 'none';
+    btn.className = 'btn btn-green';
+    btn.textContent = '⭐ Post on Google Reviews';
   } else {
-    title.style.display='block';
-    document.getElementById('msg').style.display='block';
-    btn.className='btn btn-blue';
-    btn.textContent='📩 Send feedback via WhatsApp';
+    title.style.display = 'block';
+    ta.style.display = 'block';
+    btn.className = 'btn btn-wa';
+    btn.textContent = '📩 Send feedback via WhatsApp';
   }
 }
 
-function submit(){
-  var n=sel, msg=document.getElementById('msg').value;
-  if(n===0){alert('Please select a star rating first.');return;}
-  if(n>=thr){
-    window.location.href=googleURL;
+function submit() {
+  if (sel === 0) { alert('Please select a star rating first.'); return; }
+  var msg = document.getElementById('msg').value.trim();
+  var stars = sel;
+  var starEmoji = ['','⭐','⭐⭐','⭐⭐⭐','⭐⭐⭐⭐','⭐⭐⭐⭐⭐'][stars];
+
+  if (stars >= THRESHOLD) {
+    // Notify owner on WhatsApp first, then open Google Reviews
+    var ownerMsg = '*New Review Alert — ' + SHOP + '*'
+      + '%0A%0A' + starEmoji + ' ' + stars + ' Star Rating'
+      + '%0A%0ACustomer is being redirected to Google Reviews right now!';
+    var waURL = 'https://wa.me/' + WA_NUM + '?text=' + ownerMsg;
+    // Open WhatsApp notify in background tab, then redirect to Google
+    var waWin = window.open(waURL, '_blank');
+    setTimeout(function() {
+      window.location.href = GOOGLE_URL;
+    }, 1200);
   } else {
-    var text='*New feedback for SPYON CCTV*%0A%0ARating: '+n+' star'+(n>1?'s':'')+'%0A%0AMessage: '+(msg||'(no message)');
-    window.location.href='https://wa.me/'+waNum+'?text='+text;
+    // Low rating — send full feedback to owner on WhatsApp
+    var feedbackMsg = '*New Feedback — ' + SHOP + '*'
+      + '%0A%0ARating: ' + starEmoji + ' ' + stars + ' star' + (stars > 1 ? 's' : '')
+      + '%0A%0AMessage: ' + (msg ? encodeURIComponent(msg) : '(no message)')
+      + '%0A%0A_Please follow up with this customer._';
+    window.location.href = 'https://wa.me/' + WA_NUM + '?text=' + feedbackMsg;
   }
 }
 </script>
